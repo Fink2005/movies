@@ -2,9 +2,13 @@ import React from "react";
 import { Button, Checkbox, Form, Input, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import { http } from "../../service/config";
-
+import { useDispatch } from "react-redux";
+import { setUserAction } from "../../redux/userSlice";
+// 11 23
 const FormLogin = () => {
   let navigate = useNavigate();
+  // hook dùng để gọi action từ redux / đưa dữ liệu lên store
+  let dispatch = useDispatch();
   const onFinish = (values) => {
     console.log("Success:", values);
     // gọi api login
@@ -15,6 +19,11 @@ const FormLogin = () => {
       .post("/api/QuanLyNguoiDung/DangNhap", values)
       .then((result) => {
         console.log("Thành công", result);
+        // đưa dữ liệu lên store redux
+        dispatch(setUserAction(result.data.content));
+        // đẩy xuống localStorage để giữ trạng thái đăng nhập sau khi user reload / tắt máy
+        let dataJson = JSON.stringify(result.data.content);
+        localStorage.setItem("USER_LOGIN", dataJson);
         navigate("/"); // không gây reload trang
         // window.location.href = "/";   => gây reload trang
         message.success("Đăng nhập thành công");

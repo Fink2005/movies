@@ -1,9 +1,14 @@
 // rxslice
 
 import { createSlice } from "@reduxjs/toolkit";
-
+// lay du lieu khi user reload trang
+// let userData = localStorage.getItem("USER_LOGIN")
+//   ? JSON.parse(localStorage.getItem("USER_LOGIN"))
+//   : null;
 const initialState = {
-  dataLogin: {},
+  dataLogin: localStorage.getItem("USER_LOGIN")
+    ? JSON.parse(localStorage.getItem("USER_LOGIN"))
+    : null,
 };
 
 const userSlice = createSlice({
