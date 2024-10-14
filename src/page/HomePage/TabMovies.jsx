@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { movieService } from "../../service/movieService";
-import { Tabs } from "antd";
+import React, { useEffect, useState } from 'react';
+import { movieService } from '../../service/movieService';
+import { Tabs } from 'antd';
 
 let ItemPhim = ({ phim }) => {
   return (
@@ -10,7 +10,11 @@ let ItemPhim = ({ phim }) => {
         <h2>{phim.tenPhim}</h2>
         <div className="grid grid-cols-3 gap-3">
           {phim.lstLichChieuTheoPhim.slice(0, 6).map((lichChieu, index) => {
-            return <span key={index}>{lichChieu.ngayChieuGioChieu}</span>;
+            return (
+              <span key={index}>
+                {lichChieu.ngayChieuGioChieu}.format("ddd,DD/MM- HH:mm")
+              </span>
+            );
           })}
         </div>
       </div>
@@ -33,7 +37,7 @@ export default function TabMovie() {
   };
   // heThongRap => lstCumRap =>danhSachPhim =>lstLichChieuTheoPhim
   let renderCumRap = (heThongRap) => {
-    console.log("cumRap:", heThongRap);
+    console.log('cumRap:', heThongRap);
     return heThongRap.lstCumRap.map((cumRap, index) => {
       return {
         key: index,
@@ -44,7 +48,7 @@ export default function TabMovie() {
           </div>
         ),
         children: (
-          <div style={{ height: "500px" }} className="overflow-y-scroll">
+          <div style={{ height: '500px' }} className="overflow-y-scroll">
             {cumRap.danhSachPhim.map((phim) => {
               return <ItemPhim phim={phim} key={phim.maPhim} />;
             })}
@@ -64,7 +68,7 @@ export default function TabMovie() {
             items={renderCumRap(heThongRap)}
             onChange={onChange}
             tabPosition="left"
-            style={{ height: "500px" }}
+            style={{ height: '500px' }}
           />
         ),
       };
@@ -77,7 +81,7 @@ export default function TabMovie() {
         items={renderDachSachRap()}
         onChange={onChange}
         tabPosition="left"
-        style={{ height: "500px" }}
+        style={{ height: '500px' }}
       />
     </div>
   );
