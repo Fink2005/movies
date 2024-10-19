@@ -4,10 +4,13 @@ import { Card, Popover } from 'antd';
 import Meta from 'antd/es/card/Meta';
 import { useNavigate } from 'react-router-dom';
 import { movieService } from '../../service/movieService';
+import { useSelector } from 'react-redux';
 
 export default function ListMovie() {
   // chuyển hướng trang
   let navigate = useNavigate();
+  let user = useSelector((state) => state.userSlice.dataLogin);
+
   // usf
   const [movieArr, setMovieArr] = useState([]);
   useEffect(() => {
@@ -21,9 +24,9 @@ export default function ListMovie() {
         console.log('err', err);
       });
   }, []);
-  return (
-    <div className="grid grid-cols-6 gap-5 container">
-      {movieArr.map((movie) => {
+  let renderListMovies = () => {
+    if (user) {
+      return movieArr.map((movie) => {
         return (
           <Card
             onClick={() => {
@@ -45,7 +48,10 @@ export default function ListMovie() {
             />
           </Card>
         );
-      })}
-    </div>
+      });
+    }
+  };
+  return (
+    <div className="grid grid-cols-6 gap-5 container">{renderListMovies()}</div>
   );
 }

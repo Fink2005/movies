@@ -1,40 +1,52 @@
-import React from "react";
-import { Button, Checkbox, Form, Input, message } from "antd";
-import { useNavigate } from "react-router-dom";
-import { http } from "../../service/config";
-import { useDispatch } from "react-redux";
-import { setUserAction } from "../../redux/userSlice";
+import React from 'react';
+import { Button, Checkbox, Form, Input, message } from 'antd';
+import { useNavigate } from 'react-router-dom';
+import { http } from '../../service/config';
+import { useDispatch } from 'react-redux';
+import { setUserAction } from '../../redux/userSlice';
+import { turnOffLoading, turnOnLoading } from '../../redux/spinnerSlice';
 // 11 23
 const FormLogin = () => {
   let navigate = useNavigate();
   // hook dùng để gọi action từ redux / đưa dữ liệu lên store
   let dispatch = useDispatch();
   const onFinish = (values) => {
-    console.log("Success:", values);
+    console.log('Success:', values);
     // gọi api login
     // nếu thành công =>  chuyển hướng về trang chủ
     // navigate("/");
     // nếu thất bại => thông báo lỗi message.error
+    dispatch(turnOnLoading());
     http
-      .post("/api/QuanLyNguoiDung/DangNhap", values)
+      .post('/api/QuanLyNguoiDung/DangNhap', values)
       .then((result) => {
-        console.log("Thành công", result);
+        console.log('Thành công', result);
         // đưa dữ liệu lên store redux
         dispatch(setUserAction(result.data.content));
+        dispatch(turnOffLoading());
+
         // đẩy xuống localStorage để giữ trạng thái đăng nhập sau khi user reload / tắt máy
         let dataJson = JSON.stringify(result.data.content);
-        localStorage.setItem("USER_LOGIN", dataJson);
-        navigate("/"); // không gây reload trang
+        localStorage.setItem('USER_LOGIN', dataJson);
+        if (result.data.content.maLoaiNguoiDung == 'QuanTri') {
+          navigate('/list-user');
+
+          // window.location.href = '/list-user';
+        } else {
+          navigate('/'); // không gây reload trang
+        }
         // window.location.href = "/";   => gây reload trang
-        message.success("Đăng nhập thành công");
+        message.success('Đăng nhập thành công');
       })
       .catch((err) => {
-        message.error("Đăng nhập thất bại");
-        console.log("Thất bại", err);
+        dispatch(turnOffLoading());
+
+        message.error('Đăng nhập thất bại');
+        console.log('Thất bại', err);
       });
   };
   const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
+    console.log('Failed:', errorInfo);
   };
   return (
     <Form
@@ -47,8 +59,8 @@ const FormLogin = () => {
         span: 24,
       }}
       initialValues={{
-        taiKhoan: "admin1123",
-        matKhau: "123321",
+        taiKhoan: 'admin321',
+        matKhau: '123',
       }}
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
@@ -60,7 +72,7 @@ const FormLogin = () => {
         rules={[
           {
             required: true,
-            message: "Tài khoản không được bỏ trống",
+            message: 'Tài khoản không được bỏ trống',
           },
         ]}
       >
@@ -73,7 +85,7 @@ const FormLogin = () => {
         rules={[
           {
             required: true,
-            message: "Mật khẩu không được bỏ trống",
+            message: 'Mật khẩu không được bỏ trống',
           },
         ]}
       >
