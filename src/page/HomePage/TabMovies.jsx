@@ -50,7 +50,7 @@ export default function TabMovie() {
         children: (
           <div style={{ height: '500px' }} className="overflow-y-scroll">
             {cumRap.danhSachPhim.map((phim) => {
-              return <ItemPhim phim={phim} key={phim.maPhim} />;
+              return <ItemPhim phim={phim} />;
             })}
           </div>
         ),
